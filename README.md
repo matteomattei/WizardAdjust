@@ -8,4 +8,4 @@ Tool to adjust values for Wizard software
 
 ## Formula ##
 
-0((standard_concentration * sample_absorbance) / (standard_absorbance)) * (sample_diluition / standard_dilution)
+((standard_concentration * sample_absorbance) / (standard_absorbance)) * (sample_diluition / standard_dilution)
