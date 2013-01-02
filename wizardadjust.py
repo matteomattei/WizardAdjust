@@ -28,7 +28,7 @@ if not os.path.isfile(STANDARD_FILE):
 
 # COPY ORIGINAL FILE
 now = datetime.datetime.now()
-filename = str(now.year)+'-'+str(now.month)+'-'+str(now.day)+'_'+str(now.hour)+':'+str(now.minute)+':'+str(now.second)+'_'+os.path.basename(sys.argv[1])
+filename = now.strftime('%Y-%m-%d_%H:%M:%S')+'_'+os.path.basename(sys.argv[1])
 dest = os.path.join(DESTINATION_DIR,filename)
 shutil.copy2(sys.argv[1],dest)
 
@@ -56,7 +56,7 @@ for i in reader:
 f.close()
 
 # COMPUTATION
-filename = str(now.year)+'-'+str(now.month)+'-'+str(now.day)+'_'+str(now.hour)+':'+str(now.minute)+':'+str(now.second)+'_RES_'+element+'.csv'
+filename = now.strftime('%Y-%m-%d_%H:%M:%S')+'_RES_'+element+'.csv'
 dest_file = os.path.join(DESTINATION_DIR,filename)
 if sys.version_info >= (3,0,0):
     f = open(dest_file, 'w', newline='')
@@ -73,6 +73,9 @@ for line in lines:
         conc_std = float(std[1])
         ass_std = float(line[4])
         dil_std = float(line[5])
+        writer.writerow(line)
+        continue
+    if ass_std == 0 or dil_std == 0:
         writer.writerow(line)
         continue
     if DEBUG: print('((conc_std=%d * ass=%d) / ass_std=%d) * (dil=%d / dil_std=%d)' % (conc_std, float(line[4]), ass_std, float(line[5]), dil_std))
