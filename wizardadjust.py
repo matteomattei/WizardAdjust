@@ -14,7 +14,7 @@ def isStandard(elem, std, standards):
     return (False,False)
 
 # PRELIMINARY CHECKS
-if len(sys.argv)<1:
+if len(sys.argv)==1:
     print('Please provide a Wizard generated file.')
     sys.exit(0)
 
