@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-import sys, os, datetime, shutil, re, csv
-
-DESTINATION_DIR = '/tmp/generated'
-STANDARD_FILE = '/home/matteo/GIT/WizardAdjust/defstd.csv'
-DEBUG=False
+import sys, os, datetime, re, csv
+import Tkinter, tkMessageBox
 
 def isStandard(elem, std, standards):
     for s in standards:
@@ -13,24 +10,46 @@ def isStandard(elem, std, standards):
             return (True,s[2])
     return (False,False)
 
+def copyfile(file1,file2):
+	f = open(file1,'rb')
+	buf = f.read()
+	f.close()
+	f = open(dest,'wb')
+	f.write(buf)
+	f.close()
+
+DESTINATION_DIR = os.path.join(os.environ['USERPROFILE'], 'WizardAdjust','results')
+STANDARD_FILE = os.path.join(os.environ['USERPROFILE'], 'WizardAdjust','defstd.csv')
+
+### This is necessary to hide background TK box ###
+window = Tkinter.Tk()
+window.wm_withdraw()
+###################################################
+
+DEBUG=False
+
 # PRELIMINARY CHECKS
 if len(sys.argv)==1:
-    print('Please provide a Wizard generated file.')
-    sys.exit(0)
+    tkMessageBox.showinfo(title="WizardAdjust Error", message="Please provide a Wizard generated file.")
+    sys.exit(1)
 
 if not os.path.isfile(sys.argv[1]):
-    print('The provideded Wizard generated file does not exists: '+sys.argv[1])
+    tkMessageBox.showinfo(title="WizardAdjust Error", message='The provideded Wizard generated file does not exists: '+sys.argv[1])
     sys.exit(1)
 
 if not os.path.isfile(STANDARD_FILE):
-    print('Standard file is not present at '+STANDARD_FILE)
+    tkMessageBox.showinfo(title="WizardAdjust Error", message='Standard file is not present at '+STANDARD_FILE)
     sys.exit(1)
+
+# CREATE DESTINATION DIRECTORY IF NOT EXISTS
+if not os.path.exists(DESTINATION_DIR):
+    os.makedirs(DESTINATION_DIR)
 
 # COPY ORIGINAL FILE
 now = datetime.datetime.now()
-filename = now.strftime('%Y-%m-%d_%H:%M:%S')+'_'+os.path.basename(sys.argv[1])
+filename = now.strftime('%Y-%m-%d_%H%M%S')+'_'+os.path.basename(sys.argv[1])
 dest = os.path.join(DESTINATION_DIR,filename)
-shutil.copy2(sys.argv[1],dest)
+copyfile(os.path.normpath(sys.argv[1]),dest)
 
 f = open(dest,'r')
 l = f.readlines()
@@ -56,13 +75,12 @@ for i in reader:
 f.close()
 
 # COMPUTATION
-filename = now.strftime('%Y-%m-%d_%H:%M:%S')+'_RES_'+element+'.csv'
+filename = filename.strip('.txt')+'.csv'
 dest_file = os.path.join(DESTINATION_DIR,filename)
 if sys.version_info >= (3,0,0):
     f = open(dest_file, 'w', newline='')
 else:
     f = open(dest_file, 'wb')
-f = open(dest_file,'w')
 writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
 conc_std = 0
 ass_std = 0
