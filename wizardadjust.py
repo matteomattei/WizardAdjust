@@ -34,10 +34,10 @@ DESTINATION_DIR = ''
 STANDARD_FILE = ''
 if sys.platform=='win32':
 	DESTINATION_DIR = os.path.join(os.environ['USERPROFILE'], 'WizardAdjust','results')
-	STANDARD_FILE = os.path.join(os.environ['USERPROFILE'], 'WizardAdjust','defstd.csv')
+	STANDARD_FILE = os.path.join(os.environ['USERPROFILE'], 'WizardAdjust','defstd.txt')
 elif sys.platform.startswith('linux'):
 	DESTINATION_DIR = '/tmp/results'
-	STANDARD_FILE = os.path.join(os.getcwd(),'defstd.csv')
+	STANDARD_FILE = os.path.join(os.getcwd(),'defstd.txt')
 
 ### This is necessary to hide background TK box ###
 window = Tkinter.Tk()
@@ -86,11 +86,15 @@ for i in l:
 
 # STANDARD FILE
 standards = []
-f = open(STANDARD_FILE,'r')
-reader = csv.reader(f, delimiter=',')
-for i in reader:
-	standards.append(i)
-f.close()
+try:
+	f = open(STANDARD_FILE,'r')
+	reader = csv.reader(f, delimiter=';')
+	for i in reader:
+		standards.append(i)
+	f.close()
+except:
+	tkMessageBox.showinfo(title="WizardAdjust Error", message='Malformed standard file '+STANDARD_FILE)
+	sys.exit(1)
 
 # COMPUTATION
 filename = filename.strip('.txt')+'.csv'
