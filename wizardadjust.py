@@ -8,7 +8,7 @@ def isStandard(elem, std, standards):
 	for s in standards:
 		if s[0]==std and s[1]==elem:
 			if DEBUG: print('std_elem=%s elem=%s std_std=%s std_item=%s' % (s[0],elem,s[1],std))
-		return (True,s[2])
+			return (True,s[2])
 	return (False,False)
 
 def copyfile(file1,file2):
@@ -90,6 +90,7 @@ try:
 	f = open(STANDARD_FILE,'r')
 	reader = csv.reader(f, delimiter=';')
 	for i in reader:
+		if len(i)==0: continue
 		standards.append(i)
 	f.close()
 except:
