@@ -22,12 +22,13 @@ def copyfile(file1,file2):
 
 def replacechar(mylist,search,rep):
 	"""Replace search character in every item of mylist with rep character"""
-	pattern = re.compile('^[0-9E-]+$')
+	pattern = re.compile('^[0-9.eE-]+$')
 	l = []
 	for i in mylist:
 		if pattern.search(i)!=None:
-			i.replace(search,rep)
-		l.append(i)
+			l.append(i.replace(search,rep))
+		else:
+			l.append(i)
 	return l
 
 DESTINATION_DIR = ''
