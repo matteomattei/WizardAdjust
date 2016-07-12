@@ -1,7 +1,12 @@
 #!/usr/bin/env python2
 
 import sys, os, datetime, re, csv
-import Tkinter, tkMessageBox
+if sys.version_info < (3,0):
+	import Tkinter as tkinter
+	import tkMessageBox as mbox
+else:
+	import tkinter
+	import tkinter.messagebox as mbox
 
 def isStandard(elem, std, standards):
 	"""Check if an element is a standard"""
@@ -41,7 +46,7 @@ elif sys.platform.startswith('linux'):
 	STANDARD_FILE = os.path.join(os.getcwd(),'defstd.txt')
 
 ### This is necessary to hide background TK box ###
-window = Tkinter.Tk()
+window = tkinter.Tk()
 window.wm_withdraw()
 ###################################################
 
@@ -49,15 +54,15 @@ DEBUG=False
 
 # PRELIMINARY CHECKS
 if len(sys.argv)==1:
-	tkMessageBox.showinfo(title="WizardAdjust Error", message="Please provide a Wizard generated file.")
+	mbox.showinfo(title="WizardAdjust Error", message="Please provide a Wizard generated file.")
 	sys.exit(1)
 
 if not os.path.isfile(sys.argv[1]):
-	tkMessageBox.showinfo(title="WizardAdjust Error", message='The provideded Wizard generated file does not exists: '+sys.argv[1])
+	mbox.showinfo(title="WizardAdjust Error", message='The provideded Wizard generated file does not exists: '+sys.argv[1])
 	sys.exit(1)
 
 if not os.path.isfile(STANDARD_FILE):
-	tkMessageBox.showinfo(title="WizardAdjust Error", message='Standard file is not present at '+STANDARD_FILE)
+	mbox.showinfo(title="WizardAdjust Error", message='Standard file is not present at '+STANDARD_FILE)
 	sys.exit(1)
 
 # CREATE DESTINATION DIRECTORY IF NOT EXISTS
@@ -95,7 +100,7 @@ try:
 		standards.append(i)
 	f.close()
 except:
-	tkMessageBox.showinfo(title="WizardAdjust Error", message='Malformed standard file '+STANDARD_FILE)
+	mbox.showinfo(title="WizardAdjust Error", message='Malformed standard file '+STANDARD_FILE)
 	sys.exit(1)
 
 # COMPUTATION
